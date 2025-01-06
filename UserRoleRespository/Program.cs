@@ -23,6 +23,8 @@ builder.Services.AddDbContext<MyContext>(options =>
 builder.Services.AddAutoMapper(typeof(AutomapperProfiles));
 builder.Services.AddScoped<IUserRepository, UserRepisotory>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 var app = builder.Build();
 

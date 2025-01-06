@@ -1,4 +1,5 @@
-﻿using UserRoleModel.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using UserRoleModel.DAL;
 using UserRoleModel.Entities;
 using UserRoleRespository.DAL.Abstract;
 
@@ -25,12 +26,12 @@ namespace UserRoleRespository.DAL.Concrete
 
         public List<User> GetAll()
         {
-            return _ctx.Users.ToList();
+            return _ctx.Users.Include(m => m.Role).ThenInclude(r => r.Permissions).ToList();
         }
 
         public User GetById(int id)
         {
-            return _ctx.Users.Find(id);
+            return _ctx.Users.Include( m => m.Role).ThenInclude(r => r.Permissions).Single(m => m.Id == id);
         }
 
         public void Update(User user)

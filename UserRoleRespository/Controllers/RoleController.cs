@@ -5,8 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using UserRoleModel.DAL;
 using UserRoleModel.DTOs.RoleDtos;
+using UserRoleModel.DTOs.UserDtos;
 using UserRoleModel.Entities;
-using UserRoleModel.Mapper;
+using UserRoleRespository.BLL.Abstract;
 
 namespace UserRoleModel.Controllers
 {
@@ -15,72 +16,41 @@ namespace UserRoleModel.Controllers
     public class RoleController : ControllerBase
     {
 
-        private readonly MyContext _ctx;
-        private readonly IMapper _mapper;
+        private readonly IRoleService _service;
 
-        public RoleController(MyContext ctx, IMapper mapper)
+        public RoleController(IRoleService service)
         {
-            _ctx = ctx;
-            _mapper = mapper;
+            _service = service;
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            List<Role> entities = _ctx.Roles.Include(r => r.Permissions).ToList();
-            List<RoleToListDto> dto = _mapper.Map<List<RoleToListDto>>(entities);
-            return Ok(dto);
+            var dtos = _service.GetAll();
+            return Ok(dtos);
         }
 
         [HttpGet("{id}")]
         public IActionResult Get([FromRoute] int id)
         {
 
-            Role entity = _ctx.Roles.Include(r => r.Permissions).FirstOrDefault(r => r.Id == id); 
-            RoleByIdDto dto = _mapper.Map<RoleByIdDto>(entity);
+            var dto = _service.GetById(id);
             return Ok(dto);
 
         }
 
-        //bu metod hazir permissionlari yaratdigimiz role-a elave edir
         [HttpPost]
-        public IActionResult Add([FromBody]RoleToAddDto dto)
+        public IActionResult Add([FromBody] RoleToAddDto dto)
         {
-
-            Role entity = _mapper.Map<Role>(dto);
-            List<Permission> permissions = _ctx.Permissions.Where(p => dto.PermissionIds.Contains(p.Id)).ToList();
-            entity.Permissions = permissions;
-
-            _ctx.Roles.Add(entity);
-            _ctx.SaveChanges();
-
+            _service.Add(dto);
             return Ok();
-
-        }
-
-        //bu metod is role ile birlikde permission da yaradib elave edir
-        [HttpPost("with-permission")]
-        public IActionResult AddWithPermission([FromBody] RoleToAddWithPermissionDto dto)
-        {
-
-            Role entity = _mapper.Map<Role>(dto);
-
-            _ctx.Roles.Add(entity);
-            _ctx.SaveChanges();
-
-            return Ok();
-
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update([FromRoute]int id, [FromBody] RoleToUpdateDto dto)
+        public IActionResult Update([FromRoute] int id, [FromBody] RoleToUpdateDto dto)
         {
 
-            Role entity = _mapper.Map<Role>(dto);
-
-            entity.Id = id;
-            _ctx.Roles.Update(entity);
-            _ctx.SaveChanges();
+            _service.Update(dto);
 
             return Ok();
 
@@ -90,11 +60,9 @@ namespace UserRoleModel.Controllers
         public IActionResult Delete([FromRoute] int id)
         {
 
-            Role entity = _ctx.Roles.Find(id);
-            entity.IsDeleted = true;
-            _ctx.SaveChanges();
+            _service.Delete(id);
 
-            return Ok(entity);
+            return Ok();
 
         }
 
