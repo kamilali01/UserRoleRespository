@@ -25,6 +25,7 @@ builder.Services.AddScoped<IUserRepository, UserRepisotory>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 
 var app = builder.Build();
 

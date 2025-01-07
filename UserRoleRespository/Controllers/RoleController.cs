@@ -46,6 +46,13 @@ namespace UserRoleModel.Controllers
             return Ok();
         }
 
+        [HttpPost("WithPermission")]
+        public IActionResult AddWithPermission([FromBody] RoleToAddWithPermissionDto dto)
+        {
+            _service.AddWithPermission(dto);
+            return Ok();
+        }
+
         [HttpPut("{id}")]
         public IActionResult Update([FromRoute] int id, [FromBody] RoleToUpdateDto dto)
         {
