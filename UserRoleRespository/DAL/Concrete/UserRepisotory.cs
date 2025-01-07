@@ -36,7 +36,11 @@ namespace UserRoleRespository.DAL.Concrete
 
         public void Update(User user)
         {
-            _ctx.Users.Update(user);
+            //_ctx.Users.Update(user);
+            //_ctx.SaveChanges();
+
+            _ctx.Users.Attach(user);
+            _ctx.Entry(user).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
     }

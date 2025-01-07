@@ -8,7 +8,7 @@ namespace UserRoleRespository.BLL.Abstract
         List<UserToListDto> GetAll();
         UserByIdDto GetById(int id);
         void Add(UserToAddDto user);
-        void Update(UserToUpdateDto user);
+        void Update(int id,UserToUpdateDto user);
         void Delete(int id);
     }
 }

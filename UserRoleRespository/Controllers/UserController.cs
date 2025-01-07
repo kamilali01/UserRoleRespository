@@ -49,7 +49,7 @@ namespace UserRoleModel.Controllers
         public IActionResult Update([FromRoute] int id, [FromBody] UserToUpdateDto dto)
         {
 
-            _service.Update(dto);
+            _service.Update(id, dto);
 
             return Ok();
 

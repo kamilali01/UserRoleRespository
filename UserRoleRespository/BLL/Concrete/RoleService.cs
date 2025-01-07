@@ -49,9 +49,10 @@ namespace UserRoleRespository.BLL.Concrete
             return _mapper.Map<RoleByIdDto>(role);
         }
 
-        public void Update(RoleToUpdateDto role)
+        public void Update(int id, RoleToUpdateDto role)
         {
             Role entity = _mapper.Map<Role>(role);
+            entity.Id = id;
             _unitOfWork.RoleRepository.Update(entity);
         }
     }
