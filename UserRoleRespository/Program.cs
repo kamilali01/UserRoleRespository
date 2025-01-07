@@ -5,6 +5,8 @@ using UserRoleRespository.BLL.Concrete;
 using UserRoleRespository.BLL.Mapper;
 using UserRoleRespository.DAL.Abstract;
 using UserRoleRespository.DAL.Concrete;
+using UserRoleRespository.DAL.UnitOfWork.Abstract;
+using UserRoleRespository.DAL.UnitOfWork.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

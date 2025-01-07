@@ -4,56 +4,55 @@ using UserRoleModel.DTOs.UserDtos;
 using UserRoleModel.Entities;
 using UserRoleRespository.BLL.Abstract;
 using UserRoleRespository.DAL.Abstract;
+using UserRoleRespository.DAL.UnitOfWork.Abstract;
 
 namespace UserRoleRespository.BLL.Concrete
 {
     public class RoleService: IRoleService
     {
         private readonly IMapper _mapper;
-        private readonly IRoleRepository _repo;
-        private readonly IPermissionRepository _permissionRepo;
-        public RoleService(IMapper mapper, IRoleRepository repo, IPermissionRepository permissionRepo)
+        private readonly IUnitOfWork _unitOfWork;
+        public RoleService(IMapper mapper, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
-            _repo = repo;
-            _permissionRepo = permissionRepo;
+            _unitOfWork = unitOfWork;
         }
         public void Add(RoleToAddDto role)
         {
             Role entity = _mapper.Map<Role>(role);
-            List<Permission> permissions = _permissionRepo.GetById(role.PermissionIds);
+            List<Permission> permissions = _unitOfWork.PermissionRepository.GetById(role.PermissionIds);
             entity.Permissions = permissions;
-            _repo.Add(entity);
+            _unitOfWork.RoleRepository.Add(entity);
         }
 
         public void AddWithPermission(RoleToAddWithPermissionDto role)
         {
             Role entity = _mapper.Map<Role>(role);
-            _repo.Add(entity);
+            _unitOfWork.RoleRepository.Add(entity);
         }
 
         public void Delete(int id)
         {
-            Role role = _repo.GetById(id);
-            _repo.Delete(role);
+            Role role = _unitOfWork.RoleRepository.GetById(id);
+            _unitOfWork.RoleRepository.Delete(role);
         }
 
         public List<RoleToListDto> GetAll()
         {
-            List<Role> entities = _repo.GetAll();
+            List<Role> entities = _unitOfWork.RoleRepository.GetAll();
             return _mapper.Map<List<RoleToListDto>>(entities);
         }
 
         public RoleByIdDto GetById(int id)
         {
-            Role role = _repo.GetById(id);
+            Role role = _unitOfWork.RoleRepository.GetById(id);
             return _mapper.Map<RoleByIdDto>(role);
         }
 
         public void Update(RoleToUpdateDto role)
         {
             Role entity = _mapper.Map<Role>(role);
-            _repo.Update(entity);
+            _unitOfWork.RoleRepository.Update(entity);
         }
     }
 }

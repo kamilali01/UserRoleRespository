@@ -3,46 +3,47 @@ using UserRoleModel.DTOs.UserDtos;
 using UserRoleModel.Entities;
 using UserRoleRespository.BLL.Abstract;
 using UserRoleRespository.DAL.Abstract;
+using UserRoleRespository.DAL.UnitOfWork.Abstract;
 
 namespace UserRoleRespository.BLL.Concrete
 {
     public class UserService : IUserService
     {
         private readonly IMapper _mapper;
-        private readonly IUserRepository _repo;
-        public UserService(IMapper mapper, IUserRepository repo)
+        private readonly IUnitOfWork _unitOfWork;
+        public UserService(IMapper mapper, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
-            _repo = repo;
+            _unitOfWork = unitOfWork;
         }
         public void Add(UserToAddDto user)
         {
             User entity = _mapper.Map<User>(user);
-            _repo.Add(entity);
+            _unitOfWork.UserRepository.Add(entity);
         }
 
         public void Delete(int id)
         {
-            User user = _repo.GetById(id);
-            _repo.Delete(user);
+            User user = _unitOfWork.UserRepository.GetById(id);
+            _unitOfWork.UserRepository.Delete(user);
         }
 
         public List<UserToListDto> GetAll()
         {
-            List<User> entities = _repo.GetAll();
+            List<User> entities = _unitOfWork.UserRepository.GetAll();
             return _mapper.Map<List<UserToListDto>>(entities);
         }
 
         public UserByIdDto GetById(int id)
         {
-            User user = _repo.GetById(id);
+            User user = _unitOfWork.UserRepository.GetById(id);
             return _mapper.Map<UserByIdDto>(user);
         }
 
         public void Update(UserToUpdateDto user)
         {
             User entity = _mapper.Map<User>(user);
-            _repo.Update(entity);
+            _unitOfWork.UserRepository.Update(entity);
         }
     }
 }
